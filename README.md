@@ -32,7 +32,7 @@ $ npm run db:dev:restart
 
 To install project's dependencies
 
-### $ db:dev:restart
+### $ npm run db:dev:restart
 
 Used to clean dev sqlite database, or if dev database it's not created, this command will create a file to be used as a sqlite database to application
 
@@ -40,6 +40,6 @@ Used to clean dev sqlite database, or if dev database it's not created, this com
 
 Used to start application watching changes on code
 
-### $ test:e2e
+### $ npm run test:e2e
 
 To run e2e tests, this command will use prisma to create a database with sqlite to execute e2e tests
