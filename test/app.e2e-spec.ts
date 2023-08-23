@@ -3,7 +3,7 @@ import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as pactum from 'pactum';
 
 import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { PrismaService } from 'src/infra/modules/prisma/prisma.service';
 import { AuthDto } from 'src/auth/dto';
 import { EditUserDto } from 'src/user/dto';
 import { CreateBookmarkDto, EditBookmarkDto } from 'src/bookmark/dto';

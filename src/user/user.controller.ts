@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard';
+import { JwtGuard } from 'src/infra/modules/auth/guard';
 import { UserService } from './user.service';
 import { EditUserDto, UserFiltered } from './dto';
 
