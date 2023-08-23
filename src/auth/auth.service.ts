@@ -6,6 +6,7 @@ import * as argon from 'argon2';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
+import { UNIQUE_CONSTRAINT_ERROR } from '../config';
 
 @Injectable()
 export class AuthServive {
@@ -69,7 +70,7 @@ export class AuthServive {
       };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
+        if (error.code === UNIQUE_CONSTRAINT_ERROR) {
           throw new ForbiddenException('Credentials taken');
         }
       }
