@@ -1,16 +1,15 @@
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
-import { EditUserDto } from './dto';
+import { EditUserDto, UserFiltered } from './dto';
 
 @UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get('me')
-  get(@GetUser() user: Omit<User, 'hash'>): Omit<User, 'hash'> {
+  get(@GetUser() user: UserFiltered): UserFiltered {
     return user;
   }
 
