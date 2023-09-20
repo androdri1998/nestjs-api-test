@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import * as argon from 'argon2';
+import { Argon2Service } from 'src/infra/services/argon2/argon2.service';
 
 import { PrismaService } from 'src/infra/modules/prisma/prisma.service';
 import { AuthDto } from './dto';
@@ -14,6 +14,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
+    private readonly argon2Service: Argon2Service,
   ) {}
 
   signToken(userId: number, email: string): Promise<string> {
@@ -40,7 +41,10 @@ export class AuthService {
       throw new ForbiddenException('Credentials incorrect');
     }
 
-    const passwordMacthes = await argon.verify(user.hash, password);
+    const passwordMacthes = await this.argon2Service.verify(
+      user.hash,
+      password,
+    );
     if (!passwordMacthes) {
       throw new ForbiddenException('Credentials incorrect');
     }
@@ -54,7 +58,7 @@ export class AuthService {
 
   async signUp(dto: AuthDto): Promise<{ access_token: string }> {
     const { email, password } = dto;
-    const passwordHashed = await argon.hash(password);
+    const passwordHashed = await this.argon2Service.generateHash(password);
     try {
       const user = await this.prisma.user.create({
         data: {
