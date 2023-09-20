@@ -9,7 +9,7 @@ import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
 
 @Injectable()
-export class AuthServive {
+export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
