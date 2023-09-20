@@ -4,14 +4,14 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Argon2Service } from 'src/infra/services/hash/argon2.service';
 import JwtService from 'src/infra/services/jwt/nestJsJwt.service';
 
-import { PrismaService } from 'src/infra/modules/prisma/prisma.service';
 import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
+import { UserRepository } from 'src/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly userRepository: UserRepository,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
     private readonly argon2Service: Argon2Service,
@@ -32,11 +32,7 @@ export class AuthService {
   async signIn(dto: AuthDto): Promise<{ access_token: string }> {
     const { email, password } = dto;
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new ForbiddenException('Credentials incorrect');
     }
@@ -60,12 +56,7 @@ export class AuthService {
     const { email, password } = dto;
     const passwordHashed = await this.argon2Service.generateHash(password);
     try {
-      const user = await this.prisma.user.create({
-        data: {
-          email,
-          hash: passwordHashed,
-        },
-      });
+      const user = await this.userRepository.create(email, passwordHashed);
 
       const token = await this.signToken(user.id, user.email);
 
