@@ -1,32 +1,24 @@
 import { ConfigService } from '@nestjs/config';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import JwtService from 'src/infra/services/jwt/nest-js-jwt.service';
 
 import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
 import { UserRepository } from 'src/common/repositories/user.repository';
 import { HashService } from './services/hash.service';
+import { JwtBuildService } from './services/jwt-build.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService,
+    private readonly jwtBuildService: JwtBuildService,
     private readonly config: ConfigService,
     private readonly hashService: HashService,
   ) {}
 
-  signToken(userId: number, email: string): Promise<string> {
-    const payload = {
-      sub: userId,
-      email,
-    };
-
-    return this.jwtService.signAsync(payload, {
-      expiresIn: '15m',
-      secret: this.config.get('JWT_SECRET'),
-    });
+  async signToken(userId: number, email: string): Promise<string> {
+    return await this.jwtBuildService.signAsync(userId, email);
   }
 
   async signIn(dto: AuthDto): Promise<{ access_token: string }> {

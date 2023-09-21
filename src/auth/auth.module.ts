@@ -10,6 +10,8 @@ import { UserRepository } from 'src/common/repositories/user.repository';
 import { PrismaService } from 'src/infra/services/prisma/prisma.service';
 import { JwtStrategy } from './strategies';
 import { HashService } from './services/hash.service';
+import { JwtBuildService } from './services/jwt-build.service';
+import { NestJsJwtService } from 'src/infra/services/jwt/nest-js-jwt.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -20,6 +22,7 @@ import { HashService } from './services/hash.service';
     { provide: HashService, useClass: Argon2Service },
     PrismaService,
     { provide: UserRepository, useClass: PrismaUserRepository },
+    { provide: JwtBuildService, useClass: NestJsJwtService },
   ],
 })
 export class AuthModule {}
