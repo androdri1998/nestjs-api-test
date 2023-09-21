@@ -9,6 +9,7 @@ import { PrismaUserRepository } from 'src/infra/repositories/prisma/prisma-user.
 import { UserRepository } from 'src/common/repositories/user.repository';
 import { PrismaService } from 'src/infra/services/prisma/prisma.service';
 import { JwtStrategy } from './strategies';
+import { HashService } from './services/hash.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -16,7 +17,7 @@ import { JwtStrategy } from './strategies';
   providers: [
     AuthService,
     { provide: JwtStrategy, useClass: PassportJwtStrategy },
-    Argon2Service,
+    { provide: HashService, useClass: Argon2Service },
     PrismaService,
     { provide: UserRepository, useClass: PrismaUserRepository },
   ],

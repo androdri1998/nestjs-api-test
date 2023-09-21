@@ -1,20 +1,20 @@
 import { ConfigService } from '@nestjs/config';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { Argon2Service } from 'src/infra/services/hash/argon2.service';
 import JwtService from 'src/infra/services/jwt/nest-js-jwt.service';
 
 import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
 import { UserRepository } from 'src/common/repositories/user.repository';
+import { HashService } from './services/hash.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwt: JwtService,
+    private readonly jwtService: JwtService,
     private readonly config: ConfigService,
-    private readonly argon2Service: Argon2Service,
+    private readonly hashService: HashService,
   ) {}
 
   signToken(userId: number, email: string): Promise<string> {
@@ -23,7 +23,7 @@ export class AuthService {
       email,
     };
 
-    return this.jwt.signAsync(payload, {
+    return this.jwtService.signAsync(payload, {
       expiresIn: '15m',
       secret: this.config.get('JWT_SECRET'),
     });
@@ -37,10 +37,7 @@ export class AuthService {
       throw new ForbiddenException('Credentials incorrect');
     }
 
-    const passwordMacthes = await this.argon2Service.verify(
-      user.hash,
-      password,
-    );
+    const passwordMacthes = await this.hashService.verify(user.hash, password);
     if (!passwordMacthes) {
       throw new ForbiddenException('Credentials incorrect');
     }
@@ -54,7 +51,7 @@ export class AuthService {
 
   async signUp(dto: AuthDto): Promise<{ access_token: string }> {
     const { email, password } = dto;
-    const passwordHashed = await this.argon2Service.generateHash(password);
+    const passwordHashed = await this.hashService.generateHash(password);
     try {
       const user = await this.userRepository.create(email, passwordHashed);
 
