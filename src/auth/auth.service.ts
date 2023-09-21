@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Argon2Service } from 'src/infra/services/hash/argon2.service';
-import JwtService from 'src/infra/services/jwt/nestJsJwt.service';
+import JwtService from 'src/infra/services/jwt/nest-js-jwt.service';
 
 import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
