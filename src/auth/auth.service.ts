@@ -6,7 +6,7 @@ import JwtService from 'src/infra/services/jwt/nestJsJwt.service';
 
 import { AuthDto } from './dto';
 import { UNIQUE_CONSTRAINT_ERROR } from '../config';
-import { UserRepository } from 'src/repositories/user.repository';
+import { UserRepository } from 'src/common/repositories/user.repository';
 
 @Injectable()
 export class AuthService {

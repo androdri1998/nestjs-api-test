@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateBookmarkDto, EditBookmarkDto } from './dto';
-import { BookmarkRepository } from 'src/repositories/bookmark.repository';
+import { BookmarkRepository } from 'src/common/repositories/bookmark.repository';
 
 @Injectable()
 export class BookmarkService {

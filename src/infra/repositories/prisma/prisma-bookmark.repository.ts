@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Bookmark } from '@prisma/client';
 import { CreateBookmarkDto, EditBookmarkDto } from 'src/bookmark/dto';
 import { PrismaService } from 'src/infra/services/prisma/prisma.service';
-import { BookmarkRepository } from 'src/repositories/bookmark.repository';
+import { BookmarkRepository } from 'src/common/repositories/bookmark.repository';
 
 @Injectable()
 export class PrismaBookmarkRepository implements BookmarkRepository {
